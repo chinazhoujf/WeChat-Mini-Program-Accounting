@@ -1,0 +1,63 @@
+<!--
+  pages/detail/detail.wxml —— 单笔账详情
+  数据来源：detail.js 里的 rec 字段。
+-->
+
+<view class="page">
+
+  <!-- 还在取数据时只显示一行字 -->
+  <view wx:if="{{loading}}" class="empty">加载中…</view>
+
+  <!-- 取到数据后才画这张卡片 -->
+  <block wx:else>
+    <view class="card detail-card">
+
+      <!-- 大金额：这笔到底花了多少 -->
+      <view class="amount-row">
+        <text class="amount-symbol">¥</text>
+        <!-- 支出红、收入绿，规则跟首页明细完全一致 -->
+        <text class="amount-int {{rec.type === 'expense' ? '-expense' : '-income'}}">{{rec.amount}}</text>
+      </view>
+
+      <!-- 支出/收入 标签 -->
+      <view class="tag-row">
+        <view class="tag {{rec.type === 'expense' ? 'tag-expense' : 'tag-income'}}">
+          {{rec.type === 'expense' ? '支出' : '收入'}}
+        </view>
+        <text class="tag-cat">{{rec.category}}</text>
+      </view>
+
+    </view>
+
+    <!-- ===== 详细信息 ===== -->
+    <view class="card info-card">
+
+      <view class="info-row">
+        <text class="info-label">分类</text>
+        <text class="info-value">{{rec.category}}</text>
+      </view>
+
+      <view class="info-row">
+        <text class="info-label">日期</text>
+        <text class="info-value">{{rec.date}}</text>
+      </view>
+
+      <view class="info-row">
+        <text class="info-label">备注</text>
+        <!-- 没写备注就不显示「-」，否则一片横线看着像出错 -->
+        <text class="info-value">{{rec.note ? rec.note : '（没写）'}}</text>
+      </view>
+
+    </view>
+  </block>
+
+</view>
+
+<!--
+  底部两个按钮固定在屏幕下方。
+  和记一笔页一样写在所有 </view> 外面，才能不被长内容顶走。
+-->
+<view wx:if="{{!loading}}" class="action-bar">
+  <view class="action-btn action-edit" bindtap="goEdit">改一改</view>
+  <view class="action-btn action-del" bindtap="onDelete">删掉</view>
+</view>

@@ -1,0 +1,403 @@
+/**
+ * pages/index/index.wxss —— 首页样式
+ * 页面样式优先级高于 app.wxss，所以这里可以放心覆盖全局样式
+ */
+
+/* 页面容器：底部要留出空间给悬浮按钮和 tabBar，否则最后一个元素会被挡住。
+   补 min-height:100vh 是为了「内容不满一屏时也能拉得动」，
+   开了下拉刷新却什么都拉不动，用户会以为页面卡了。
+   box-sizing:border-box 让 100vh 把下面那段 padding 一起算进去，不然会多出一条缝。 */
+.page {
+  /* 【关键修复】底部留白从 200rpx 加到 320rpx。
+     ＋ 按钮是 fixed 悬浮的，bottom:160rpx + 高 112rpx = 它的顶缘在 272rpx 处，
+     再算上阴影扩散，内容底部只留 200rpx 时，滚到底最后 1~2 条明细
+     会被按钮压住（你截图里「餐饮」那行被盖住就是它）。
+     留 320rpx = 按钮顶缘 272rpx + 余量，滚到底任何一条都完整可见。 */
+  padding-bottom: 320rpx;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* ===== 顶部「本机暂存」黄提示条 ===== */
+/* 用浅黄底 + 深褐字：够显眼又不刺眼，和下方白卡片能区分开 */
+.cloud-warn {
+  margin: 20rpx 24rpx 0;
+  padding: 20rpx 24rpx;
+  background-color: #FFF7E6;          /* 浅黄 */
+  border: 2rpx solid #FFE0A3;         /* 描边一圈，边界更清楚 */
+  border-radius: 16rpx;
+}
+
+.cloud-warn-title {
+  display: block;
+  font-size: 28rpx;
+  color: #8A5A00;                     /* 深褐，对比度够，不是那种灰黄看不清的字 */
+  font-weight: 600;
+}
+
+.cloud-warn-sub {
+  display: block;
+  margin-top: 6rpx;
+  font-size: 24rpx;
+  color: #B5822A;
+}
+
+/* ===== 云服务故障红条 ===== */
+/* 和上面那条黄色提示条同一套思路：界面上必须能看出数据去哪了。
+   红色在这里表示「需要注意」，不表示错误崩溃 —— 记账功能照常可用。 */
+.cloud-err {
+  margin: 0 24rpx 20rpx;
+  padding: 20rpx 24rpx;
+  background: #FFF1F0;          /* 很浅的红底，不要刺眼，它是提醒不是报错 */
+  border: 2rpx solid #FFCCC7;   /* 浅红描边，跟卡片分开 */
+  border-radius: 16rpx;
+}
+
+.cloud-err-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;  /* 左边标题，右边重试，两端对齐 */
+}
+
+.cloud-err-title {
+  font-size: 26rpx;
+  color: #D4380D;                  /* 偏深的红，文字要看得清 */
+  font-weight: 600;
+}
+
+.cloud-err-retry {
+  font-size: 24rpx;
+  color: #D4380D;
+  padding: 6rpx 18rpx;
+  border: 2rpx solid #D4380D;
+  border-radius: 24rpx;
+  white-space: nowrap;             /* 别让「重试」两个字被挤成两行 */
+}
+
+.cloud-err-sub {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  color: #C0785A;                  /* 比标题浅一档，当说明文字用 */
+}
+
+/* ===== 本月支出卡片 ===== */
+.month-card {
+  margin: 24rpx 24rpx 0;
+  /* 卡片顶部多留一点，让内容不贴着状态栏 */
+  padding-top: 40rpx;
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;  /* 两端对齐：左月右预算 */
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.month-text {
+  font-size: 34rpx;
+  font-weight: 600;
+}
+
+.budget-text {
+  font-size: 26rpx;
+  color: #8A8F99;
+}
+
+.amount-label {
+  font-size: 26rpx;
+  color: #8A8F99;
+  margin-bottom: 8rpx;
+}
+
+/* 大数字那一行：¥ 和整数很大，小数小一号，这是记账 App 的通用排法 */
+.amount-row {
+  display: flex;
+  align-items: baseline;   /* 基线对齐：大小字号底部对齐，不会歪 */
+  margin-bottom: 28rpx;
+}
+
+.amount-symbol {
+  font-size: 40rpx;
+  color: #1A1A1A;
+  margin-right: 8rpx;
+}
+
+.amount-int {
+  font-size: 88rpx;
+  font-weight: 700;
+  line-height: 1;          /* 行高压到 1，数字才不会撑得老高 */
+  font-variant-numeric: tabular-nums;  /* 等宽数字，位数变化时宽度不变 */
+}
+
+.amount-dec {
+  font-size: 40rpx;
+  color: #6B7280;
+  line-height: 1;
+}
+
+/* ===== 预算进度条 ===== */
+.progress-bg {
+  height: 16rpx;
+  background-color: #EDEFF2;
+  border-radius: 8rpx;
+  overflow: hidden;   /* 把超出的圆角裁掉，进度条末端才是圆的 */
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #07C160;   /* 绿 = 没超支 */
+  border-radius: 8rpx;
+  /* 宽度由 js 的 progressWidth 控制，这里只管颜色和形状 */
+  transition: width 0.3s ease; /* 宽度变化带 0.3 秒动画，看着舒服 */
+}
+
+/* 超支专用：整条变红 */
+.progress-overdue {
+  background-color: #E64340;
+}
+
+.remain-text {
+  margin-top: 16rpx;
+  font-size: 26rpx;
+  color: #6B7280;
+}
+
+.remain-overdue {
+  color: #E64340;   /* 超支时这行也变红 */
+}
+
+/* ===== 明细列表 ===== */
+.list-card {
+  margin: 0 24rpx;
+}
+
+/* 分组标题那一行：左边「今天」，右边「支出 ¥58.5」，两端对齐 */
+.day-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 32rpx;
+  padding-right: 32rpx;
+}
+
+.day-total {
+  font-variant-numeric: tabular-nums;   /* 数字等宽，位数变化不抖 */
+}
+
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28rpx 0;
+  border-bottom: 2rpx solid #F2F3F5;  /* 最后一行不需要分隔线 */
+}
+
+/* 可以点的行：加一点左右内边距，按住时整块变灰，手感才对 */
+.list-item-click {
+  padding-left: 20rpx;
+  padding-right: 20rpx;
+  border-radius: 12rpx;
+}
+
+.list-item-hover {
+  background-color: #F7F8FA;
+}
+
+.list-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.item-left {
+  display: flex;
+  flex-direction: column;   /* 竖着排：分类在上，备注在下 */
+  gap: 6rpx;
+}
+
+.item-cat {
+  font-size: 30rpx;
+}
+
+.item-note {
+  font-size: 24rpx;
+  color: #9AA0A6;
+}
+
+/* 支出用红色（消费=花出去=红的），符合国内记账 App 的习惯 */
+.item-amount.-expense {
+  color: #E64340;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 收入用绿色（进账=赚回来=绿的），和主色一致，和支出一眼分得开 */
+.item-amount.-income {
+  color: #07C160;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===== 空态 ===== */
+.empty-title {
+  font-size: 30rpx;
+  color: #4B5563;
+  margin-bottom: 12rpx;
+}
+
+.empty-tip {
+  font-size: 26rpx;
+  color: #9AA0A6;
+}
+
+/* ===== 右下角悬浮 ＋ 号 ===== */
+.fab {
+  position: fixed;
+  right: 40rpx;
+  bottom: 160rpx;      /* 离底部 160rpx，正好在 tabBar 上方，不打架 */
+  width: 112rpx;
+  height: 112rpx;
+  border-radius: 50%;   /* 50% 就是正圆 */
+  background-color: #07C160;
+  box-shadow: 0 8rpx 24rpx rgba(7, 193, 96, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fab-plus {
+  color: #FFFFFF;
+  font-size: 64rpx;
+  line-height: 1;
+  margin-top: -4rpx;   /* 视觉居中微调，＋ 号本身偏上一点点 */
+}
+
+/* 按下去的时候缩小一点，给个「我点了」的手感 */
+.fab:active {
+  transform: scale(0.94);
+}
+
+/* ============================================================
+ * 深色模式（dark mode）
+ *
+ * 生效前提：app.json 里加一行 "darkmode": true（纯配置，不碰任何
+ * 功能逻辑）。不加这行的话下面整段媒体查询不会生效，浅色样式照旧。
+ *
+ * 配色和记一笔页同一套：背景 #121212、卡片 #1E1E1E、次级面 #2A2A2A；
+ * 红色/绿色金额在深底上都做了提亮，保证一眼分得清。
+ * ============================================================ */
+@media (prefers-color-scheme: dark) {
+
+  /* 页面底色和全局文字（page 写在页面 wxss 里只对本页生效） */
+  page {
+    background-color: #121212;
+    color: #E8E8E8;
+  }
+
+  /* 本页所有白底容器统一换深色：支出卡、明细卡、空态、加载框 */
+  .month-card,
+  .list-card,
+  .empty {
+    background-color: #1E1E1E;
+    box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.2);
+  }
+
+  /* 「本机暂存」黄条：换成暗黄底 + 提亮黄字，警示感不变 */
+  .cloud-warn {
+    background-color: #332B12;
+    border-color: #6B5518;
+  }
+
+  .cloud-warn-title {
+    color: #E8B45A;
+  }
+
+  .cloud-warn-sub {
+    color: #B58A45;
+  }
+
+  /* 云故障红条：换成暗红底 + 提亮红字，「重试」描边同步提亮 */
+  .cloud-err {
+    background-color: #361C19;
+    border-color: #6B2E28;
+  }
+
+  .cloud-err-title,
+  .cloud-err-retry {
+    color: #FF7874;
+  }
+
+  .cloud-err-retry {
+    border-color: #FF7874;
+  }
+
+  .cloud-err-sub {
+    color: #C08070;
+  }
+
+  /* 本月支出大数字：¥ 和整数换浅色 */
+  .amount-symbol {
+    color: #E8E8E8;
+  }
+
+  .amount-dec {
+    color: #9BA0A8;
+  }
+
+  /* 预算文字与「还剩」说明提亮一档 */
+  .budget-text,
+  .remain-text {
+    color: #9BA0A8;
+  }
+
+  .remain-overdue {
+    color: #FF6B66;
+  }
+
+  /* 进度条：底槽换深灰；绿/红两色都提亮，深底上依然醒目 */
+  .progress-bg {
+    background-color: #333333;
+  }
+
+  .progress-bar {
+    background-color: #3DCC79;
+  }
+
+  .progress-overdue {
+    background-color: #FF6B66;
+  }
+
+  /* 明细列表：分隔线、按住变灰的反馈色换深色 */
+  .list-item {
+    border-bottom-color: #333333;
+  }
+
+  .list-item-hover {
+    background-color: #2A2A2A;
+  }
+
+  .item-note {
+    color: #7A7F87;
+  }
+
+  /* 支出红 / 收入绿：提亮，深底上对比度和浅色模式一致 */
+  .item-amount.-expense {
+    color: #FF6B66;
+  }
+
+  .item-amount.-income {
+    color: #3DCC79;
+  }
+
+  /* 空态文字 */
+  .empty-title {
+    color: #B8BCC2;
+  }
+
+  .empty-tip {
+    color: #7A7F87;
+  }
+
+  /* ＋ 悬浮按钮保持绿底白字（品牌主色和按下手感不动） */
+}

@@ -1,0 +1,132 @@
+/**
+ * pages/mine/mine.wxss —— 我的页样式
+ */
+
+.page {
+  padding-bottom: 60rpx;
+}
+
+/* 一行 = 左边说明 + 右边值/箭头，是设置页最通用的排法 */
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28rpx 0;
+  border-bottom: 2rpx solid #F2F3F5;
+}
+
+.row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* 第一行顶部也不需要多余的内边距 */
+.card .row:first-child {
+  padding-top: 0;
+}
+
+.row-label {
+  font-size: 30rpx;
+}
+
+.row-right {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.row-value {
+  font-size: 28rpx;
+  color: #6B7280;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 右边那行小灰字（如「查看全文」「不可逆」），比箭头更早看到但不抢戏 */
+.row-tip {
+  font-size: 24rpx;
+  color: #9AA0A6;
+}
+
+.row-tip-danger {
+  color: #E64340;   /* 「不可逆」这种提示用红，先打个预防针 */
+}
+
+/* ===== 已记笔数 / 存储方式 两栏 ===== */
+/* overlay 在 .card 上（app.wxss 定义），这里只管内部两栏怎么排 */
+.stat-card {
+  padding: 28rpx 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stat-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6rpx;
+}
+
+.stat-num {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #1A1A1A;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 存储方式是文字，字号要小一号，不然会挤成两行 */
+.stat-num-sm {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #4B5563;
+}
+
+/* 存储方式那一片做成可点的：按住变灰，提示「这里能点」 */
+.stat-item-click:active {
+  opacity: 0.6;
+}
+
+/* 按健康状态上色，一眼看出云是不是正常的。
+   cloudState 由 js 给（cloud / error / local），这里三种颜色刚好对应黄/绿/红三种状态。 */
+.stat-num-cloud {
+  color: #07C160;   /* 绿 = 正常，和 tabBar 选中色一致，看到就放心 */
+}
+
+.stat-num-error {
+  color: #E64340;   /* 红 = 连不上，需要你去处理 */
+}
+
+.stat-num-local {
+  color: #E6A23C;   /* 黄 = 本机暂存，不算错，但要知道数据没进云 */
+}
+
+.stat-label {
+  font-size: 24rpx;
+  color: #9AA0A6;
+}
+
+/* 两栏之间的竖分隔线 */
+.stat-divider {
+  width: 2rpx;
+  height: 56rpx;
+  background-color: #F2F3F5;
+}
+
+/* 右边的「›」箭头，颜色淡一点，别抢左边文字的注意力 */
+.arrow {
+  color: #C0C4CC;
+  font-size: 36rpx;
+  line-height: 1;
+}
+
+.danger-text {
+  color: #E64340;
+}
+
+.footer {
+  text-align: center;
+  color: #C0C4CC;
+  font-size: 24rpx;
+  padding-top: 60rpx;
+}

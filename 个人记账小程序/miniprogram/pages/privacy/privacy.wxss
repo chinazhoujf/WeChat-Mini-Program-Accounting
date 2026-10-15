@@ -1,0 +1,84 @@
+/**
+ * pages/privacy/privacy.wxss —— 隐私协议正文样式
+ *
+ * 长文页的原则：字号别太小（这里 27rpx 下限）、行高拉到 1.9、
+ * 段落之间留白，否则一屏灰压压的字没人看得下去。
+ */
+
+.page {
+  padding: 0 0 60rpx;
+}
+
+.doc {
+  margin: 24rpx;
+  background-color: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 40rpx 32rpx 48rpx;
+}
+
+.doc-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  text-align: center;
+  color: #1A1A1A;
+}
+
+.doc-meta {
+  text-align: center;
+  font-size: 24rpx;
+  color: #9AA0A6;
+  margin-top: 8rpx;
+  padding-bottom: 24rpx;
+  border-bottom: 2rpx solid #F2F3F5;
+}
+
+.sec {
+  margin-top: 36rpx;
+}
+
+.sec-h {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #07C160;   /* 小节标题用主色，扫一眼就知道章节结构 */
+  margin-bottom: 12rpx;
+}
+
+.item-h {
+  font-size: 27rpx;
+  font-weight: 600;
+  color: #4B5563;
+  margin-top: 20rpx;
+  margin-bottom: 6rpx;
+}
+
+.sec-p {
+  font-size: 27rpx;
+  line-height: 1.9;          /* 长文行高必须大，1.6 会挤成一片 */
+  color: #4B5563;
+  margin-bottom: 10rpx;
+}
+
+/* 协议里出现「不收集」「不会共享」这种否定词时加粗强调 */
+.sec-p b {
+  color: #E64340;
+  font-weight: 600;
+}
+
+/* ===== 底部撤回按钮 ===== */
+.withdraw-btn {
+  margin-top: 28rpx;
+  text-align: center;
+  padding: 24rpx 0;
+  border-radius: 16rpx;
+  font-size: 30rpx;
+}
+
+.withdraw-btn {
+  background-color: #E64340;
+  color: #FFFFFF;
+  box-shadow: 0 4rpx 16rpx rgba(230, 67, 64, 0.3);
+}
+
+.withdraw-btn:active {
+  opacity: 0.9;
+}

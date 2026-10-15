@@ -1,0 +1,288 @@
+/**
+ * pages/record/record.wxss —— 记一笔页面样式
+ *
+ * 设计原则和首页一致：白底 + 圆角卡片 + 一屏之内点完，不滚动也能操作完。
+ */
+
+.page {
+  padding-bottom: 220rpx;   /* 给底部保存按钮留位置，不然最后一个卡片会被压住 */
+}
+
+/* ===== 顶部 支出/收入 切换 ===== */
+.type-switch {
+  display: flex;
+  gap: 20rpx;               /* 两个按钮之间的距离 */
+  padding: 24rpx 24rpx 0;   /* 左右各留 24rpx，和卡片对齐 */
+}
+
+.type-btn {
+  flex: 1;                  /* 两个按钮各占一半宽 */
+  text-align: center;
+  padding: 24rpx 0;
+  border-radius: 16rpx;
+  background-color: #FFFFFF;
+  font-size: 30rpx;
+  color: #6B7280;
+  border: 2rpx solid #EDEFF2;
+  /* 状态之间切换时颜色渐变，不突兀 */
+  transition: all 0.15s ease;
+}
+
+/* 选中「支出」= 红色系：花钱用红，是国内记账 App 的通用习惯 */
+.type-btn-on-expense {
+  background-color: #FEF0EF;
+  color: #E64340;
+  border-color: #E64340;
+  font-weight: 600;
+}
+
+/* 选中「收入」= 绿色系：进账用绿，和首页主色一致 */
+.type-btn-on-income {
+  background-color: #EAF8F0;
+  color: #07C160;
+  border-color: #07C160;
+  font-weight: 600;
+}
+
+/* ===== 金额输入区 ===== */
+.amount-card {
+  margin: 24rpx 24rpx 0;
+  padding-top: 48rpx;
+  padding-bottom: 36rpx;
+  text-align: center;
+}
+
+.amount-input-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;   /* 水平居中，记钱的时候最舒服 */
+}
+
+.amount-symbol {
+  font-size: 56rpx;
+  color: #9AA0A6;
+  margin-right: 12rpx;
+}
+
+.amount-input {
+  /* 【关键修复】小程序的 input 是原生组件，有自己默认的高度，
+     不会跟着 font-size 自动变高 —— 字设得再大，框还是那么矮，
+     数字就会被拦腰裁掉（你截图里「只看到上半截」就是它）。
+     这里显式把高度撑到 132rpx，96rpx 的字装进去还有余量，
+     line-height 同值让数字在框里垂直居中。 */
+  height: 132rpx;
+  line-height: 132rpx;
+  /* 宽度按内容自适应，位数变多也不会顶到屏幕边缘；
+     数字加大后最小宽度也跟着放宽一档，10 位数也不挤 */
+  min-width: 360rpx;
+  font-size: 96rpx;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;   /* 等宽数字：位数变化时不左右抖 */
+  text-align: left;
+}
+
+.amount-placeholder {
+  color: #D6D9DE;
+  font-weight: 400;
+}
+
+.amount-tip {
+  margin-top: 16rpx;
+  font-size: 24rpx;
+  color: #C4C8CE;
+}
+
+/* ===== 分类小方块 ===== */
+.cat-list {
+  display: flex;
+  flex-wrap: wrap;          /* 一行放不下就自动换行，不用滚动 */
+  gap: 16rpx;
+}
+
+.cat-item {
+  padding: 16rpx 32rpx;
+  border-radius: 999rpx;    /* 799rpx 的圆角 = 胶囊形状，看着像按钮 */
+  background-color: #F4F5F7;
+  font-size: 28rpx;
+  color: #4B5563;
+  transition: all 0.15s ease;
+}
+
+/* 选中的分类：主色绿底白字，一眼就知道自己选了哪个 */
+.cat-item-on {
+  background-color: #07C160;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+/* ===== 备注 / 日期 表单行 ===== */
+.form-card {
+  margin: 24rpx;
+  /* 表单行的 padding 由 form-row 自己控制，这里不要再叠一层 */
+  padding: 8rpx 32rpx;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;   /* 说明靠左，内容靠右 */
+  min-height: 96rpx;
+}
+
+.form-label {
+  font-size: 30rpx;
+  color: #4B5563;
+  margin-right: 24rpx;
+}
+
+/* flex:1 让输入框占满剩下的宽度，右边缘和卡片对齐，整齐 */
+.form-input {
+  flex: 1;
+  font-size: 30rpx;
+  text-align: right;
+  color: #1A1A1A;
+}
+
+.form-ph {
+  color: #C4C8CE;
+}
+
+.form-value {
+  font-size: 30rpx;
+  color: #1A1A1A;
+  font-variant-numeric: tabular-nums;
+}
+
+.form-line {
+  height: 2rpx;
+  background-color: #F2F3F5;
+}
+
+/* ===== 底部保存按钮 ===== */
+.save-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 20rpx 32rpx calc(20rpx + env(safe-area-inset-bottom));
+  /* 半透明白底 + 一点模糊，按钮从内容里浮出来而不是硬贴上去 */
+  background-color: rgba(255, 255, 255, 0.96);
+}
+
+.save-btn {
+  background-color: #07C160;
+  color: #FFFFFF;
+  text-align: center;
+  padding: 26rpx 0;
+  border-radius: 16rpx;
+  font-size: 34rpx;
+  font-weight: 600;
+  box-shadow: 0 4rpx 16rpx rgba(7, 193, 96, 0.3);
+}
+
+.save-btn:active {
+  transform: scale(0.99);
+  opacity: 0.9;
+}
+
+/* 正在保存时按钮变灰，提醒你别急 */
+.save-btn-disabled {
+  background-color: #C4C8CE;
+  box-shadow: none;
+}
+
+/* ============================================================
+ * 深色模式（dark mode）
+ *
+ * 生效前提：app.json 里加一行 "darkmode": true（纯配置，不碰任何
+ * 功能逻辑）。不加这行的话下面整段媒体查询不会生效，浅色样式照旧。
+ *
+ * 写法：整页颜色都在 @media (prefers-color-scheme: dark) 里覆盖，
+ * 系统切到深色时自动生效，浅色模式完全不受影响。
+ * 配色遵循「深底亮字」：背景 #121212，卡片 #1E1E1E，
+ * 次级面 #2A2A2A；红色/绿色选中态都做了提亮，保证深底上够醒目。
+ * ============================================================ */
+@media (prefers-color-scheme: dark) {
+
+  /* 页面底色和全局文字（page 选择器写在页面 wxss 里只对本页生效，
+     不会影响其他页面，其他页面以后要跟随时各自加同款媒体查询） */
+  page {
+    background-color: #121212;
+    color: #E8E8E8;
+  }
+
+  /* 本页所有白卡片统一换深色卡片；阴影在深底上没有意义，调得更淡 */
+  .amount-card,
+  .form-card {
+    background-color: #1E1E1E;
+    box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.2);
+  }
+
+  /* 支出/收入 未选中态：深灰底 + 提边框 */
+  .type-btn {
+    background-color: #2A2A2A;
+    color: #9BA0A8;
+    border-color: #3A3A3A;
+  }
+
+  /* 选中「支出」：红字提亮到 #FF7874，底色换成暗红，深底上依然一眼可辨 */
+  .type-btn-on-expense {
+    background-color: #3A201E;
+    color: #FF7874;
+    border-color: #FF7874;
+  }
+
+  /* 选中「收入」：绿字提亮到 #45D27E，底色换成暗绿 */
+  .type-btn-on-income {
+    background-color: #12321F;
+    color: #45D27E;
+    border-color: #45D27E;
+  }
+
+  /* 金额区：¥ 符号、占位符、提示语全部提亮一档 */
+  .amount-symbol {
+    color: #6E737A;
+  }
+
+  .amount-placeholder {
+    color: #5A5E64;
+  }
+
+  .amount-tip {
+    color: #5F646B;
+  }
+
+  /* 分类胶囊：未选中 = 深灰底浅灰字；选中 = 保持绿底白字（对比度足够，不动） */
+  .cat-item {
+    background-color: #2A2A2A;
+    color: #C2C6CC;
+  }
+
+  /* 备注表单 */
+  .form-label {
+    color: #B8BCC2;
+  }
+
+  .form-input,
+  .form-value {
+    color: #E8E8E8;
+  }
+
+  .form-ph {
+    color: #5F646B;
+  }
+
+  .form-line {
+    background-color: #333333;
+  }
+
+  /* 底部保存栏：白色半透明换成深色半透明，浮层效果不变 */
+  .save-bar {
+    background-color: rgba(24, 24, 24, 0.96);
+  }
+
+  /* 保存按钮保持绿底白字（品牌主色不动）；置灰态换成深灰 */
+  .save-btn-disabled {
+    background-color: #4A4A4A;
+  }
+}

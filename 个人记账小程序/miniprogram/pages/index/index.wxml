@@ -1,0 +1,127 @@
+<!--
+  pages/index/index.wxml —— 首页的「长什么样」（页面骨架）
+  和 index.js 分工：这里只负责摆位置，数据统一由 index.js 提供。
+  {{ }} 双花括号里的内容 = 变量，会被自动替换成 js 里的值。
+-->
+
+<view class="page">
+
+  <!--
+    ===== 顶部「存储模式」提示条 =====
+    只在「本机暂存」时出现（云没通）。点一下会弹出怎么开云的三步说明。
+    为什么要放在这里：数据到底存哪了，界面上必须看得见，
+    不能只藏在调试器里，否则云没通你根本发现不了。
+  -->
+  <view wx:if="{{isLocalMode}}" class="cloud-warn" bindtap="onTapCloudWarn">
+    <text class="cloud-warn-title">当前是本机暂存{{localCount ? '，有 ' + localCount + ' 笔还没进云' : ''}}</text>
+    <text class="cloud-warn-sub">数据没进云 → 点这里看怎么开</text>
+  </view>
+
+  <!--
+    ===== 云服务故障红条 =====
+    只在「云配了但连不上」时出现（与上面的黄条二选一，不会同时出现）。
+    红条上面挂一个「重试」按钮（catchtap 的 catch 是关键：
+    它会拦住点击不再往上冒，不然点重试会连带触发外层红条的说明弹窗）。
+  -->
+  <view wx:if="{{cloudError}}" class="cloud-err" bindtap="onTapCloudError">
+    <view class="cloud-err-row">
+      <text class="cloud-err-title">云服务暂时连不上，数据先存本机</text>
+      <text class="cloud-err-retry" catchtap="retryCloud">重试</text>
+    </view>
+    <text class="cloud-err-sub">点这里看具体原因和怎么恢复</text>
+  </view>
+
+  <!--
+    ===== 账目「取不完」黄条 =====
+    正常用一辈子不会出现。只有这个月记了 1000 笔以上（db.js 里定死的上限）才显示。
+    之所以要显示：数据没取全却不说，首页总额就会悄悄少一截，
+    记账 App 这种「少算一块钱都不知道」的错最伤人。
+  -->
+  <view wx:if="{{dataWarning}}" class="cloud-warn">
+    <text class="cloud-warn-title">{{dataWarning}}</text>
+  </view>
+
+  <!-- ===== 第一部分：本月支出卡片 ===== -->
+  <view class="card month-card">
+
+    <!-- 顶部一行：左边月份，右边预算 -->
+    <view class="card-top">
+      <text class="month-text">{{currentMonthShort}}</text>
+      <text class="budget-text">预算 {{budget}} 元</text>
+    </view>
+
+    <!-- 本月支出大数字：¥ 小一点，数字大一点，一眼看到就踏实了 -->
+    <view class="amount-label">本月支出</view>
+    <view class="amount-row">
+      <text class="amount-symbol">¥</text>
+      <text class="amount-int">{{monthExpenseInt}}</text>
+      <text class="amount-dec">{{monthExpenseDec}}</text>
+    </view>
+
+    <!-- 预算进度条：超过 100% 就变红（M3 实现超支提醒） -->
+    <view class="progress-bg">
+      <view class="progress-bar {{overdue ? 'progress-overdue' : ''}}"
+            style="width:{{progressWidth}}%"></view>
+    </view>
+
+    <!-- 还剩多少 / 已超支多少 -->
+    <view class="remain-text {{overdue ? 'remain-overdue' : ''}}">
+      {{overdue ? '已超支' : '还剩'}} ¥{{remainInt}}{{remainDec}}
+    </view>
+  </view>
+
+  <!-- ===== 第二部分：按天明细 ===== -->
+  <!-- block 是个「不生成任何界面的容器」：它只是个打包标签，让 wx:if 包住整段更清爽 -->
+
+  <!-- 有账目时才显示分组；一个分组 = 一个日期标题 + 一张卡片 -->
+  <!-- 注意这里加了 !cloudError：云连不上时不许显示「这个月还没有记账」的空态， -->
+  <!-- 那会让你误以为自己没记上账，实际是云端压根取不回来。 -->
+  <block wx:if="{{hasRecord && !cloudError}}">
+    <view wx:for="{{dayGroups}}" wx:for-item="group" wx:key="date">
+      <!-- wx:for-item 改名很重要：内层循环也要用 item，不改名会互相打架 -->
+      <view class="section-title day-head">
+        <text>{{group.label}}</text>
+        <text class="day-total">支出 ¥{{group.dayTotal}}</text>
+      </view>
+      <view class="card list-card">
+        <!--
+          每一条明细都能点（data-id 带上它的编号），点进去就是 detail 页。
+          hover-class 是「按住时变灰」的手感，告诉用户这行是可以点的。
+        -->
+        <view wx:for="{{group.items}}" wx:for-item="item" wx:key="_id"
+              class="list-item list-item-click" hover-class="list-item-hover"
+              data-id="{{item._id}}" bindtap="goDetail">
+          <view class="item-left">
+            <text class="item-cat">{{item.category}}</text>
+            <!-- 没写备注就不显示那行灰字，少一点噪音 -->
+            <text wx:if="{{item.note}}" class="item-note">{{item.note}}</text>
+          </view>
+          <!-- 支出前面带负号（红），收入带正号（绿），一眼分得清 -->
+          <text class="item-amount {{item.type === 'expense' ? '-expense' : '-income'}}">
+            {{item.type === 'expense' ? '-' : '+'}}{{item.amount}}
+          </text>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 云正常、还没账、且不是加载中 → 才显示空态引导。
+       加 !loading 是防"空态闪一下"：数据还在路上时先不宣布"没记账"。 -->
+  <view wx:elif="{{!cloudError && !loading}}" class="empty">
+    <view class="empty-title">这个月还没有记账</view>
+    <view class="empty-tip">点右下角的 ＋ 号，3 秒记一笔</view>
+  </view>
+
+  <!-- 加载中（只在还没内容时才显示：内容已经在屏幕上时再挂个"加载中"，
+       看起来就像"加载完了还在转"——真机上卡住的那一幕就是这样） -->
+  <view wx:if="{{loading && !hasRecord}}" class="empty">加载中…</view>
+</view>
+
+<!--
+  右下角悬浮的 ＋ 号按钮。
+  注意它写在所有 </view> 外面：因为要 position:fixed 悬浮在内容之上，
+  如果塞在页面容器里会被滚动的内容挡住。
+-->
+<view class="fab" bindtap="goRecord">
+  <text class="fab-plus">＋</text>
+</view>

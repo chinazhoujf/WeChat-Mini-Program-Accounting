@@ -1,0 +1,64 @@
+<!--
+  pages/mine/mine.wxml —— 我的页（M6 已补齐：真删除 + 协议页 + 条数）
+-->
+<view class="page">
+
+  <!-- ===== 当前月预算 ===== -->
+  <view class="section-title">预算设置</view>
+  <view class="card" bindtap="editBudget">
+    <view class="row">
+      <text class="row-label">本月预算</text>
+      <view class="row-right">
+        <text class="row-value">{{budget}} 元</text>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 当前存了多少笔 + 数据存在哪：这两个是给用户看的"我心里有数"信息 -->
+  <view class="card stat-card">
+    <view class="stat-item">
+      <text class="stat-num">{{recordCount}}</text>
+      <text class="stat-label">已记笔数</text>
+    </view>
+    <view class="stat-divider"></view>
+    <!-- 存储方式做成了可点的：云一出问题，颜色会变红，点一下就能看到原因和怎么修 -->
+    <view class="stat-item stat-item-click" bindtap="onTapCloudState">
+      <text class="stat-num stat-num-sm stat-num-{{cloudState}}">{{storageText}}</text>
+      <text class="stat-label">存储方式</text>
+    </view>
+  </view>
+
+  <!-- ===== 关于与合规 ===== -->
+  <view class="section-title">隐私与合规</view>
+  <view class="card">
+    <view class="row" bindtap="goPrivacy">
+      <text class="row-label">隐私协议</text>
+      <view class="row-right">
+        <!-- 新版微信协议里，带 < 的入口点开是微信自己的规则说明，不是你的协议 -->
+        <text class="row-tip">查看全文</text>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+    <view class="row" bindtap="withdrawConsent">
+      <text class="row-label">撤回同意并删除我的数据</text>
+      <view class="row-right">
+        <text class="row-tip row-tip-danger">不可逆</text>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 危险操作 ===== -->
+  <view class="section-title">数据管理</view>
+  <view class="card">
+    <view class="row" bindtap="clearAll">
+      <text class="row-label danger-text">清空全部账目</text>
+      <view class="row-right">
+        <text class="arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="footer">枕江逢记账 · v1.0 · 开发中</view>
+</view>

@@ -1,0 +1,143 @@
+/**
+ * pages/detail/detail.wxss —— 详情页样式
+ * 和记一笔页保持同一套视觉：白底 + 圆角卡片 + 底部固定按钮
+ */
+
+.page {
+  padding-bottom: 220rpx;   /* 给底部两个按钮留位置 */
+}
+
+/* ===== 顶部金额卡片 ===== */
+.detail-card {
+  margin: 24rpx 24rpx 0;
+  padding: 48rpx 32rpx 32rpx;
+  text-align: center;
+}
+
+.amount-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+}
+
+.amount-symbol {
+  font-size: 44rpx;
+  color: #9AA0A6;
+  margin-right: 10rpx;
+}
+
+.amount-int {
+  font-size: 96rpx;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 支出金额用红、收入用绿，和首页明细一套规则 */
+.amount-int.-expense {
+  color: #E64340;
+}
+
+.amount-int.-income {
+  color: #07C160;
+}
+
+/* ===== 支出/收入 标签 ===== */
+.tag-row {
+  margin-top: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16rpx;
+}
+
+.tag {
+  padding: 8rpx 24rpx;
+  border-radius: 999rpx;    /* 胶囊形 */
+  font-size: 24rpx;
+}
+
+.tag-expense {
+  background-color: #FEF0EF;
+  color: #E64340;
+}
+
+.tag-income {
+  background-color: #EAF8F0;
+  color: #07C160;
+}
+
+.tag-cat {
+  font-size: 28rpx;
+  color: #4B5563;
+}
+
+/* ===== 详细信息 ===== */
+.info-card {
+  margin: 24rpx;
+  padding: 8rpx 32rpx;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 96rpx;
+  border-bottom: 2rpx solid #F2F3F5;
+}
+
+/* 最后一行不要分隔线，不然看着像下面还有内容 */
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  font-size: 30rpx;
+  color: #8A8F99;
+  margin-right: 24rpx;
+}
+
+.info-value {
+  font-size: 30rpx;
+  color: #1A1A1A;
+}
+
+/* ===== 底部两个按钮 ===== */
+.action-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  gap: 20rpx;
+  padding: 20rpx 32rpx calc(20rpx + env(safe-area-inset-bottom));
+  background-color: rgba(255, 255, 255, 0.96);
+}
+
+/* flex:1 = 两个按钮各占一半，中间留 20rpx 间隙 */
+.action-btn {
+  flex: 1;
+  text-align: center;
+  padding: 26rpx 0;
+  border-radius: 16rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+}
+
+.action-edit {
+  background-color: #07C160;
+  color: #FFFFFF;
+  box-shadow: 0 4rpx 16rpx rgba(7, 193, 96, 0.3);
+}
+
+/* 删除用红色底：危险按钮必须一眼看出是红的 */
+.action-del {
+  background-color: #E64340;
+  color: #FFFFFF;
+  box-shadow: 0 4rpx 16rpx rgba(230, 67, 64, 0.3);
+}
+
+.action-btn:active {
+  transform: scale(0.99);
+  opacity: 0.9;
+}

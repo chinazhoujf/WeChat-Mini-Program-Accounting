@@ -1,0 +1,45 @@
+<!--
+  pages/stats/stats.wxml —— 统计页骨架
+  两个图表区域先留容器，M5 再把画布填进去。
+-->
+<view class="page">
+
+  <!-- ===== 分类占比饼图 ===== -->
+  <view class="section-title">本月分类占比</view>
+  <view class="card chart-card">
+    <!--
+      canvas type="2d" 是微信官方推荐的画图画布（老接口在逐步淘汰，别用旧的）。
+      id 用来在 js 里找到它，后面画图全靠这个 id。
+    -->
+    <canvas type="2d" id="pieCanvas" class="chart-canvas"></canvas>
+
+    <!-- 图例：颜色方块 + 分类名 + 金额 + 百分比（M5 一起生成） -->
+    <view class="legend" wx:for="{{pieData}}" wx:key="name" wx:for-item="item">
+      <view class="legend-dot" style="background-color:{{item.color}}"></view>
+      <text class="legend-name">{{item.name}}</text>
+      <text class="legend-value">¥{{item.value}}</text>
+      <text class="legend-rate">{{item.rate}}%</text>
+    </view>
+  </view>
+
+  <!-- 分类一个都没有 → 图例区域不显示，省得下面挂一排空白 -->
+  <view wx:if="{{pieData.length}}" class="notice">本月共记 {{pieData.length}} 个分类</view>
+
+  <!-- ===== 近 6 个月趋势图 ===== -->
+  <view class="section-title">近 6 个月趋势</view>
+  <view class="card chart-card">
+    <view class="trend-head">
+      <text class="trend-total-label">合计支出</text>
+      <text class="trend-total-value">¥{{trendTotal}}</text>
+    </view>
+    <canvas type="2d" id="trendCanvas" class="chart-canvas chart-canvas-tall"></canvas>
+  </view>
+
+  <!-- 取数据失败或还没数据时的兜底提示 -->
+  <view wx:if="{{!loading && !pieData.length && !trendData.length}}" class="notice">
+    还没有任何账目，先去首页记一笔吧
+  </view>
+
+  <!-- 加载中（数据回来之前别显示大片空白） -->
+  <view wx:if="{{loading}}" class="notice">加载中…</view>
+</view>

@@ -1,0 +1,44 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/record/record",
+    "pages/detail/detail",
+    "pages/stats/stats",
+    "pages/mine/mine",
+    "pages/privacy/privacy"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "navigationBarTitleText": "枕江逢记账",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F5F6F8"
+  },
+  "tabBar": {
+    "color": "#9AA0A6",
+    "selectedColor": "#07C160",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "明细",
+        "iconPath": "assets/tabbar/list.png",
+        "selectedIconPath": "assets/tabbar/list-on.png"
+      },
+      {
+        "pagePath": "pages/stats/stats",
+        "text": "统计",
+        "iconPath": "assets/tabbar/stats.png",
+        "selectedIconPath": "assets/tabbar/stats-on.png"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "assets/tabbar/mine.png",
+        "selectedIconPath": "assets/tabbar/mine-on.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

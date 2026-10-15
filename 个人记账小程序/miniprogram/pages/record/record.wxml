@@ -1,0 +1,82 @@
+<!--
+  pages/record/record.wxml —— 记一笔页面的「长什么样」
+
+  分工提醒：这里只管摆位置和绑定事件（bindtap 就是「点我」），
+  具体逻辑在 record.js，长相在 record.wxss。
+-->
+
+<view class="page">
+
+  <!-- ===== 顶部：支出 / 收入 切换 ===== -->
+  <view class="type-switch">
+    <!-- 每个按钮都带上 data-type，点了以后 record.js 才知道你点的是哪个 -->
+    <view class="type-btn {{type === 'expense' ? 'type-btn-on-expense' : ''}}"
+          data-type="expense" bindtap="switchType">
+      支出
+    </view>
+    <view class="type-btn {{type === 'income' ? 'type-btn-on-income' : ''}}"
+          data-type="income" bindtap="switchType">
+      收入
+    </view>
+  </view>
+
+  <!-- ===== 金额输入区：这是全场最大最显眼的地方 ===== -->
+  <view class="card amount-card">
+    <view class="amount-input-row">
+      <text class="amount-symbol">¥</text>
+      <!-- type="digit" 会直接弹出数字键盘，用户不用先切输入法，快很多 -->
+      <!-- 这个 input 只负责接收，显示和校验都在 record.js 的 onAmountInput 里 -->
+      <input class="amount-input" type="digit" value="{{amount}}"
+             placeholder="0.00" placeholder-class="amount-placeholder"
+             bindinput="onAmountInput" confirm-type="done" />
+    </view>
+    <view class="amount-tip">点一下就能打数字</view>
+  </view>
+
+  <!-- ===== 分类：一排小方块，点一下选中 ===== -->
+  <view class="section-title">选个分类</view>
+  <view class="card">
+    <view class="cat-list">
+      <!-- wx:for 会按分类数量重复生成方块，wx:key 给它一个身份证号避免列表乱序 -->
+      <view wx:for="{{categories}}" wx:key="*this"
+            class="cat-item {{category === item ? 'cat-item-on' : ''}}"
+            data-name="{{item}}" bindtap="pickCategory">
+        {{item}}
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 备注 + 日期 ===== -->
+  <view class="card form-card">
+
+    <!-- 备注这一行：左边是说明，右边是输入框 -->
+    <view class="form-row">
+      <text class="form-label">备注</text>
+      <input class="form-input" type="text" value="{{note}}"
+             placeholder="买了啥？（可以不填）" placeholder-class="form-ph"
+             bindinput="onNoteInput" maxlength="30" />
+    </view>
+
+    <!-- 分隔线：让两行之间有呼吸感，不然挤在一起像没写完 -->
+    <view class="form-line"></view>
+
+    <!-- 日期这一行用 picker（滚轮选择器），点一下弹出日期盘 -->
+    <view class="form-row">
+      <text class="form-label">日期</text>
+      <picker mode="date" value="{{date}}" end="{{maxDate}}" bindchange="onDateChange">
+        <view class="form-value">{{date}}</view>
+      </picker>
+    </view>
+
+  </view>
+
+</view>
+
+<!--
+  底部保存按钮。
+  和首页那个 ＋ 号一样，写在所有 </view> 外面才能保证它固定在屏幕最下方，
+  不会被上面的长内容顶走。
+-->
+<view class="save-bar">
+  <view class="save-btn {{submitting ? 'save-btn-disabled' : ''}}" bindtap="save">保存这一笔</view>
+</view>

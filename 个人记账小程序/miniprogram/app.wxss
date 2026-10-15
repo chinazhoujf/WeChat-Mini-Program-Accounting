@@ -1,0 +1,69 @@
+/**
+ * app.wxss —— 全项目通用的样式（写在 wxss 里的样式，每个页面自动生效）
+ * 页面自己的 wxss 里可以覆盖这里的样式，谁在后面谁说了算。
+ */
+
+/* ===== 1. 页面容器 ===== */
+page {
+  /* 页面底色用浅灰，卡片是白的，这样界面看起来有层次 */
+  background-color: #F5F6F8;
+  /* 手机上字小看不清，统一把字号放大一档 */
+  font-size: 30rpx;
+  /* 深色字，浅色底，保证可读性 */
+  color: #1A1A1A;
+  /* 系统默认字体，跟随用户的手机字体设置 */
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+}
+
+/* ===== 2. 卡片：白底 + 圆角 + 浅阴影，是本项目最核心的视觉元素 ===== */
+.card {
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 32rpx;
+  /* 阴影很淡，只是让卡片浮起来一点，不要做很重的阴影 */
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+/* ===== 3. 区块小标题（比如「今天」「近 6 个月」那一行）===== */
+.section-title {
+  padding: 24rpx 32rpx 12rpx;
+  font-size: 28rpx;
+  color: #8A8F99;
+}
+
+/* ===== 4. 金额数字的通用样式 ===== */
+.money {
+  /* 数字用等宽字体，位数变化时不会左右跳动 */
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===== 5. 空态提示（还没有数据时显示的占位）===== */
+.empty {
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 80rpx 32rpx;
+  text-align: center;
+  color: #9AA0A6;
+  font-size: 28rpx;
+}
+
+/* ===== 6. 通用按钮（主色实心）===== */
+.btn-primary {
+  background-color: #07C160;
+  color: #FFFFFF;
+  border-radius: 16rpx;
+  text-align: center;
+  padding: 24rpx 0;
+  font-size: 32rpx;
+}
+
+/* ===== 7. 次要按钮（白底灰边，用在「取消」这类）===== */
+.btn-plain {
+  background-color: #FFFFFF;
+  color: #1A1A1A;
+  border: 2rpx solid #E3E5E8;
+  border-radius: 16rpx;
+  text-align: center;
+  padding: 24rpx 0;
+  font-size: 32rpx;
+}
